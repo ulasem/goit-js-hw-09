@@ -1,16 +1,47 @@
+const feedback_form_state = 'feedback-form-state';
+
 const formData = {
   email: '',
   message: '',
 };
 
-// Використовуй метод делегування для відстеження змін у формі через подію input.
-// Зберігай актуальні дані з полів email та message у formData та записуй цей об’єкт у локальне сховище.
-// Використовуй ключ "feedback-form-state" для зберігання даних у сховищі.
+const feedbackForm = document.querySelector('.feedback-form');
+const emailInput = feedbackForm.querySelector('input');
+const textArea = feedbackForm.querySelector('textarea');
 
-// При завантаженні сторінки перевір, чи є дані у локальному сховищі.
-// Якщо так, використовуй їх для заповнення форми та об'єкта formData.
-// Якщо ні, залиш поля форми порожніми.
+checkData();
 
-// Перед відправленням форми переконайся, що обидва поля форми заповнені. 
-// Якщо будь-яке з полів (властивостей об’єкта formData) порожнє, показуй сповіщення з текстом «Fill please all fields». 
-// Якщо всі поля заповнені, виведи у консоль об’єкт formData з актуальними значеннями, очисти локальне сховище, об’єкт formData і поля форми.
+feedbackForm.addEventListener('input', handlerInput);
+feedbackForm.addEventListener('submit', handlerSubmit);
+
+function handlerInput(event) {
+  formData.email = event.currentTarget.elements.email.value;
+  formData.message = event.currentTarget.elements.message.value;
+
+  localStorage.setItem(feedback_form_state, JSON.stringify(formData));
+}
+
+function checkData() {
+  const data = JSON.parse(localStorage.getItem('feedback-form-state'));
+
+  if (data) {
+    emailInput.value = data.email;
+    textArea.value = data.message;
+  } else {
+    return;
+  }
+}
+
+function handlerSubmit(event) {
+  event.preventDefault();
+
+  if (!emailInput.value || !textArea.value) {
+    alert('Fill please all fields');
+    return;
+  }
+
+  console.log(formData);
+
+  localStorage.removeItem(feedback_form_state);
+  event.currentTarget.reset();
+}
