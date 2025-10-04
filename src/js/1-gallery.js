@@ -67,7 +67,7 @@ const images = [
   },
 ];
 
-const gallery = document.querySelector('.gallery');
+let gallery = document.querySelector('.gallery');
 
 gallery.insertAdjacentHTML(
   'beforeend',
