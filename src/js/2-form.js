@@ -15,27 +15,28 @@ feedbackForm.addEventListener('input', handlerInput);
 feedbackForm.addEventListener('submit', handlerSubmit);
 
 function handlerInput(event) {
-  formData.email = event.currentTarget.elements.email.value;
-  formData.message = event.currentTarget.elements.message.value;
+  formData.email = event.currentTarget.elements.email.value.trim();
+  formData.message = event.currentTarget.elements.message.value.trim();
 
   localStorage.setItem(feedback_form_state, JSON.stringify(formData));
 }
 
 function checkData() {
-  const data = JSON.parse(localStorage.getItem('feedback-form-state'));
+  const savedData = JSON.parse(localStorage.getItem(feedback_form_state));
 
-  if (data) {
-    emailInput.value = data.email;
-    textArea.value = data.message;
-  } else {
-    return;
+  if (savedData) {
+    emailInput.value = savedData.email || '';
+    textArea.value = savedData.message || '';
+
+    formData.email = savedData.email || '';
+    formData.message = savedData.message || '';
   }
 }
 
 function handlerSubmit(event) {
   event.preventDefault();
 
-  if (!emailInput.value || !textArea.value) {
+  if (!emailInput.value.trim() || !textArea.value.trim()) {
     alert('Fill please all fields');
     return;
   }
@@ -44,4 +45,6 @@ function handlerSubmit(event) {
 
   localStorage.removeItem(feedback_form_state);
   event.currentTarget.reset();
+  formData.email = '';
+  formData.message = '';
 }
